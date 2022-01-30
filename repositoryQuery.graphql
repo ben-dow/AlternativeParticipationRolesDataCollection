@@ -1,0 +1,39 @@
+query {
+  rateLimit {
+    remaining
+    cost
+    resetAt
+  }
+  search(
+    query: "archived:false stars:>500 is:public pushed:${DATE}"
+    type: REPOSITORY
+    first: 100
+    ${AFTER}
+  ) {
+    repositoryCount
+    pageInfo {
+      startCursor
+      hasNextPage
+      endCursor
+    }
+    repos: edges {
+      repo: node {
+        ... on Repository {
+          url
+          id
+          name
+          stargazerCount
+          resourcePath
+          latestRelease {
+            publishedAt
+          }
+          updatedAt
+          description
+          isLocked
+          forkCount
+          createdAt
+        }
+        }
+      }
+    }
+  }
