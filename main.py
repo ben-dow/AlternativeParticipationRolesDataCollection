@@ -10,7 +10,7 @@ import requests
 ### Config Variables ###
 from util import keys_exists
 
-START_DELTA = 30
+START_DELTA = 40
 REPO_FETCH_MAX_THREADS = 1
 
 f = open("tokens.json")
@@ -61,10 +61,10 @@ def GithubGraphQLQuery(q, header):
             print(j)
             sleep(1)
 
-        repF = open("repositories.txt", "a", encoding="utf-8")
+        repF = open("rawRepositories.txt", "a", encoding="utf-8")
         for r in repos:
-            repF.write(str(r) + "\n")
-        sleep(1)
+            repF.write(str(json.dumps(r)) + "\n")
+        sleep(.5)
 
 
 for i in range(len(headers)):
