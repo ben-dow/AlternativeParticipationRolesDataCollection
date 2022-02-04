@@ -1,5 +1,6 @@
 import json
 import random
+import webbrowser
 
 f = open("rawRepositories.txt", "r", encoding="utf-8")
 repos = []
@@ -7,16 +8,15 @@ repos = []
 for line in f:
     repos.append(json.loads(line))
 
-randomNums = []
-for i in range(0, 50):
-    randomNum = random.randint(0, len(repos) - 1)
+random.shuffle(repos)
 
-    while randomNum  in randomNums:
-        print('here')
-        randomNum = random.randint(0, len(repos) - 1)
-
-    randomNums.append(randomNum)
+eR = open("eligibleRepositories.txt", "a", encoding="utf-8")
 
 
-for i in randomNums:
-    print(repos[i])
+for r in repos:
+    webbrowser.open_new_tab(r['repo']['url'])
+    response = input(r['repo']['url'] + "\nDoes this qualify? (y/n)")
+
+    if response == "y":
+        eR.write(json.dumps(r)+"\n")
+        eR.flush()
