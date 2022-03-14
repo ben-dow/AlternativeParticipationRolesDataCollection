@@ -14,7 +14,7 @@ for r in f:
         keys = repo['repo'].keys()
         keysGot = True
 
-c = open('repos.csv', "w",newline='', encoding="utf-8")
+c = open('repos.csv', "w", newline='', encoding="utf-8")
 csvwriter = csv.DictWriter(c, fieldnames=keys)
 csvwriter.writeheader()
 

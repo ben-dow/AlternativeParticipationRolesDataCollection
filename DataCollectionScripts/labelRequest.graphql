@@ -1,0 +1,13 @@
+
+  repository(owner: "${owner}", name: "${name}") {
+    url
+    id
+    name
+    resourcePath
+    labels(first:100) {
+     nodes {
+       id
+      	name
+     }
+    }
+  }
