@@ -1,0 +1,32 @@
+
+repository(owner: "${owner}", name: "${name}") {
+    url
+    id
+    name
+    resourcePath
+    issues(first:100, filterBy: {
+      labels: "${label}"
+    }) {
+      totalCount
+      edges {
+        node {
+          id,
+          title,
+          author {
+            login
+          }
+          labels (first:100) {
+            totalCount
+            edges{
+              node{
+                name
+              }
+            }
+          }
+          participants{
+            totalCount
+          }
+        }
+      }
+    }
+    }
