@@ -57,25 +57,52 @@ for repo in masterRepos:
 reposWithActivitiesPercentage = (reposWithActivitiesCount / numOfRepositories) * 100
 
 # Repos with tags that represent alternative-participation activities
-reposWithBugReportTag = []
-reposWithEnhancementRequestTag = []
-reposWithDocumentationTag = []
 
+reposWithBugReportTag = []
+reposWithParticipationInBugLabels = []
+
+reposWithEnhancementRequestTag = []
+reposWithParticipationInEnhancementLabels = []
+
+reposWithDocumentationTag = []
+reposWithParticipationInDocumentationLabels = []
 for repo in masterRepos:
     labels = masterRepos[repo]['labels']
+    repoName = masterRepos[repo]['name']
     for l in labels:
         label = l.lower()
         if "bug" in label:
-            if masterRepos[repo]['name'] not in reposWithBugReportTag:
+            if repoName not in reposWithBugReportTag:
                 reposWithBugReportTag.append(masterRepos[repo]['name'])
 
+            if repoName not in reposWithParticipationInBugLabels:
+                reposWithParticipationInBugLabels.append(repoName)
+
         if "enhancement" in label or "request" in label:
-            if masterRepos[repo]['name'] not in reposWithEnhancementRequestTag:
+            if repoName not in reposWithEnhancementRequestTag:
                 reposWithEnhancementRequestTag.append(masterRepos[repo]['name'])
+            if repoName not in reposWithParticipationInEnhancementLabels:
+                reposWithParticipationInEnhancementLabels.append(repoName)
 
         if "docs" in label or "documentation" in label or "doc" in label:
-            if masterRepos[repo]['name'] not in reposWithDocumentationTag:
+            if repoName not in reposWithDocumentationTag:
                 reposWithDocumentationTag.append(masterRepos[repo]['name'])
+            if repoName not in reposWithParticipationInDocumentationLabels:
+                reposWithParticipationInDocumentationLabels.append(repoName)
+
+
+numReposWithBugReportLabel = len(reposWithBugReportTag)
+numReposWithParticipationInBugReportLabel = len(reposWithParticipationInBugLabels)
+percentOfBugReportReposWithParticipation = numReposWithParticipationInBugReportLabel / numReposWithBugReportLabel
+
+numReposWithEnhancementLabel = len(reposWithEnhancementRequestTag)
+numReposWithParticipationInEnhancementLabel = len(reposWithParticipationInEnhancementLabels)
+percentOfEnhancementReposWithParticipation = numReposWithParticipationInEnhancementLabel / numReposWithEnhancementLabel
+
+numReposWithDocsLabel = len(reposWithDocumentationTag)
+numReposWithParticipationInDocsLabel = len(reposWithParticipationInDocumentationLabels)
+percentOfDocsReposWithParticipation = numReposWithParticipationInDocsLabel / numReposWithDocsLabel
+
 
 reposWithBugDocsEnhance = list(set(reposWithEnhancementRequestTag) | set(reposWithBugReportTag))
 reposWithBugDocsEnhance = list(set(reposWithBugDocsEnhance) | set(reposWithDocumentationTag))
@@ -103,26 +130,30 @@ for repo in masterRepos:
             activityDict[key] = []
         activityDict[key].append(a)
 
+
+# Participation Data
+
+numOfReposWithSomeParticipationInTags = 0
+reposWithoutParticipation = []
+for repo in masterRepos:
+    hasParticipation = False
+    for label in masterRepos[repo]['labels']:
+        if len(masterRepos[repo]['labels'][label]) > 0:
+            numOfReposWithSomeParticipationInTags += 1
+            hasParticipation = True
+            break
+    if not hasParticipation:
+        reposWithoutParticipation.append(repo)
+
+percentageOfReposWithParticipationInTags = (numOfReposWithSomeParticipationInTags/numOfRepositories) * 100
+
 # Print Out
 
 print("Number of Repos: " + str(numOfRepositories))
 print("\nRepos with Activities Count " + str(reposWithActivitiesCount))
 print("\tPercentage " + str(reposWithActivitiesPercentage))
 
-print(
-    "\nRepos with some variation of any of the following labels in the issue tracker [Enhancement/Request, "
-    "Documentation, Bug Report]: " + str(
-        numReposWithBugDocsOrEnhance))
-print("\tPercentage: " + str(percentageReposWithBugDocsOrEnahance))
 
-print("\nNumber of Repos with Enhancement Request Label: " + str(numReposWithEnhance))
-print("\tPercentage: " + str(percentageReposWithEnhance))
-
-print("\nNumber of Repos with Documentation Issue Label: " + str(numReposWithDoc))
-print("\tPercentage: " + str(percentageReposWithDoc))
-
-print("\nNumber of Repos with Bug Report Label: " + str(numReposWithBug))
-print("\tPercentage: " + str(percentageReposWithBug))
 
 print("\nNumber of Unique Activities Found: " + str(len(activityDict)))
 
@@ -151,4 +182,32 @@ for a in activityDict:
     print("\tPercentage of repositories with a call to action for this activity: " + str(
         (inHowToContribute / len(activityDict[a]) * 100)))
 
-print("\n\nParticipation Data")
+print("\n\nParticipation Data\n")
+
+print("Number of Repos that Have Participation in their Alternative-Activity Labels: " + str(numOfReposWithSomeParticipationInTags))
+print("Percentage of Repos that Have Participation in their Alternative-Activity Labels: " + str(percentageOfReposWithParticipationInTags))
+
+print(
+    "\nRepos with some variation of any of the following labels in the issue tracker [Enhancement/Request, "
+    "Documentation, Bug Report]: " + str(
+        numReposWithBugDocsOrEnhance))
+print("\tPercentage: " + str(percentageReposWithBugDocsOrEnahance))
+
+print("\nNumber of Repos with Enhancement Request Label: " + str(numReposWithEnhance))
+print("\tPercentage of total repositories: " + str(percentageReposWithEnhance))
+print("\tNumber of Repositories with Participation in Enhancement Requests: " + str(numReposWithParticipationInEnhancementLabel))
+print("\tPercentage of Repositories (that have an enhancement label) with Participation in Enhancement Requests: " + str(percentOfDocsReposWithParticipation))
+
+print("\nNumber of Repos with Documentation Issue Label: " + str(numReposWithDoc))
+print("\tPercentage of total repositories: " + str(percentageReposWithDoc))
+print("\tNumber of Repositories with Participation in documentation label: " + str(numReposWithParticipationInDocsLabel))
+print("\tPercentage of Repositories (that have a documentation label) with participation in enhancement requests: " + str(percentOfDocsReposWithParticipation))
+
+
+print("\nNumber of Repos with Bug Report Label: " + str(numReposWithBug))
+print("\tPercentage of total repositories: " + str(percentageReposWithBug))
+print("\tNumber of repositories with participation in bug report label: " + str(numReposWithParticipationInBugReportLabel))
+print("\tPercentage of repositories (that have a documentation label) with participation in bug report: " + str(percentOfBugReportReposWithParticipation))
+
+
+
