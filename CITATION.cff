@@ -1,0 +1,9 @@
+cff-version: 1.2.0
+message: "If you use this data/analysis tools please cite"
+authors:
+  - family-names: Dow
+    given-names: Benjamin
+title: "Alternative Participation Roles Data and Analysis"
+version: 2.0.4
+doi: 10.5281/zendo.6468957
+date-released: 2022-04-18
